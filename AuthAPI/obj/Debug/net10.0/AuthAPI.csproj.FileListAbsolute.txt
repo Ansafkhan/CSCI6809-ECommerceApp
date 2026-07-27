@@ -159,3 +159,4 @@
 /Users/ansaf/Documents/Adv App Dev/ECommerceApp/AuthAPI/obj/Debug/net10.0/AuthAPI.pdb
 /Users/ansaf/Documents/Adv App Dev/ECommerceApp/AuthAPI/obj/Debug/net10.0/AuthAPI.genruntimeconfig.cache
 /Users/ansaf/Documents/Adv App Dev/ECommerceApp/AuthAPI/obj/Debug/net10.0/ref/AuthAPI.dll
+/Users/ansaf/Documents/Adv App Dev/ECommerceApp/AuthAPI/obj/Debug/net10.0/AuthAPI.sourcelink.json

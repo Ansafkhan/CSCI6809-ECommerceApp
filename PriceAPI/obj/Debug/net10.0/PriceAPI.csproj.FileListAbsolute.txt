@@ -39,3 +39,4 @@
 /Users/ansaf/Documents/Adv App Dev/ECommerceApp/PriceAPI/obj/Debug/net10.0/PriceAPI.pdb
 /Users/ansaf/Documents/Adv App Dev/ECommerceApp/PriceAPI/obj/Debug/net10.0/PriceAPI.genruntimeconfig.cache
 /Users/ansaf/Documents/Adv App Dev/ECommerceApp/PriceAPI/obj/Debug/net10.0/ref/PriceAPI.dll
+/Users/ansaf/Documents/Adv App Dev/ECommerceApp/PriceAPI/obj/Debug/net10.0/PriceAPI.sourcelink.json

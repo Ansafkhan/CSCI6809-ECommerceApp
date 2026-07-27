@@ -1,0 +1,83 @@
+@{
+    ViewData["Title"] = "Purchase Successful";
+    var items = ViewBag.PurchasedItems as List<object>;
+    decimal total = ViewBag.Total ?? 0;
+}
+
+<div class="text-center py-4">
+    <div style="font-size:5rem; animation: bounceIn 0.5s ease;">🎉</div>
+    <h2 class="fw-bold text-success mt-3">Congratulations!</h2>
+    <p class="text-muted fs-5">Your purchase was successful!</p>
+</div>
+
+<div class="card border-0 shadow-sm rounded-4 mx-auto" style="max-width:600px;">
+    <div class="card-body p-4">
+        <h5 class="fw-bold mb-3">
+            <i class="bi bi-receipt text-primary"></i> Order Summary
+        </h5>
+        <table class="table table-hover">
+            <thead class="table-light">
+                <tr>
+                    <th>Product</th>
+                    <th class="text-center">Qty</th>
+                    <th class="text-center">Price</th>
+                    <th class="text-end">Subtotal</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (items != null)
+                {
+                    @foreach (dynamic item in items)
+                    {
+                        <tr>
+                            <td><i class="bi bi-box text-primary me-2"></i>@item.name</td>
+                            <td class="text-center">
+                                <span class="badge bg-primary rounded-pill">@item.quantity</span>
+                            </td>
+                            <td class="text-center text-muted">$@item.price</td>
+                            <td class="text-end fw-bold">$@item.subtotal</td>
+                        </tr>
+                    }
+                }
+            </tbody>
+            <tfoot>
+                <tr class="table-light">
+                    <td colspan="3" class="fw-bold text-end fs-5">Total Paid:</td>
+                    <td class="text-end fw-bold fs-5 text-success">$@total</td>
+                </tr>
+            </tfoot>
+        </table>
+
+        <div class="alert alert-success rounded-3 mt-3">
+            <i class="bi bi-check-circle-fill me-2"></i>
+            Your order has been placed! Stock has been updated automatically.
+        </div>
+
+        <div class="d-flex gap-2 justify-content-center mt-3">
+            <a href="/Products" class="btn btn-primary rounded-pill px-4">
+                <i class="bi bi-grid me-1"></i>Continue Shopping
+            </a>
+            <a href="/" class="btn btn-outline-secondary rounded-pill px-4">
+                <i class="bi bi-house me-1"></i>Home
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+    @@keyframes bounceIn {
+        0% {
+            transform: scale(0);
+            opacity: 0;
+        }
+
+        60% {
+            transform: scale(1.2);
+        }
+
+        100% {
+            transform: scale(1);
+            opacity: 1;
+        }
+    }
+</style>

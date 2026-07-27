@@ -20,6 +20,58 @@ namespace CartAPI.Controllers
             _httpClient = httpClientFactory.CreateClient();
         }
 
+        private async Task PublishToRabbitMQ(int productId, int quantity, int userId)
+        {
+            try
+            {
+                var rabbitHost = Environment.GetEnvironmentVariable("RabbitMQ__Host") ?? "localhost";
+
+                var factory = new RabbitMQ.Client.ConnectionFactory
+                {
+                    HostName = rabbitHost,
+                    Port = 5672,
+                    UserName = "guest",
+                    Password = "guest"
+                };
+
+                using var connection = await factory.CreateConnectionAsync();
+                using var channel = await connection.CreateChannelAsync();
+
+                await channel.QueueDeclareAsync(
+                    queue: "cart_items",
+                    durable: true,
+                    exclusive: false,
+                    autoDelete: false,
+                    arguments: null
+                );
+
+                var message = System.Text.Json.JsonSerializer.Serialize(new
+                {
+                    productId,
+                    quantity,
+                    userId
+                });
+
+                var body = System.Text.Encoding.UTF8.GetBytes(message);
+
+                var properties = new RabbitMQ.Client.BasicProperties();
+
+                await channel.BasicPublishAsync(
+                    exchange: "",
+                    routingKey: "cart_items",
+                    mandatory: false,
+                    basicProperties: properties,
+                    body: body
+                );
+
+                Console.WriteLine($"Published to RabbitMQ: {message}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"RabbitMQ publish error: {ex.Message}");
+            }
+        }
+
         // GET /cart/{userid}
         [Authorize]
         [HttpGet("{userId}")]
@@ -44,7 +96,7 @@ namespace CartAPI.Controllers
                 new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
             var productResponse = await _httpClient.GetAsync(
-                $"http://localhost:5048/products/byIds?productIds={string.Join(",", productIds)}");
+                $"{Environment.GetEnvironmentVariable("PRODUCTS_URL") ?? "http://localhost:5048"}/products/byIds?productIds={string.Join(",", productIds)}");
 
             if (!productResponse.IsSuccessStatusCode)
                 return BadRequest("Could not fetch products");
@@ -66,10 +118,17 @@ namespace CartAPI.Controllers
                     {
                         UserId = userId,
                         ProductId = productId,
+                        ProductName = products?.FirstOrDefault(p =>
+                            p.Id == productId)?.Name ?? "Unknown",
                         Quantity = 1
                     });
             }
             await _db.SaveChangesAsync();
+            // Publish to RabbitMQ
+            foreach (var productId in productIds)
+            {
+                await PublishToRabbitMQ(productId, 1, userId);
+            }
 
             // Call PriceAPI to get total price
             var cartItems = await _db.CartItems
@@ -77,7 +136,7 @@ namespace CartAPI.Controllers
                 .ToListAsync();
 
             var priceResponse = await _httpClient.PostAsJsonAsync(
-                "http://localhost:5097/price", cartItems);
+                $"{Environment.GetEnvironmentVariable("PRICE_URL") ?? "http://localhost:5097"}/price", cartItems);
 
             var priceJson = await priceResponse.Content.ReadAsStringAsync();
             var priceData = System.Text.Json.JsonSerializer.Deserialize<object>(priceJson);

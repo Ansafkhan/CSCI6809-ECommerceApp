@@ -1,0 +1,205 @@
+@using System.Text.Json
+@{
+    ViewData["Title"] = "Admin Dashboard";
+    var users = ViewBag.Users as List<JsonElement> ?? new();
+    var products = ViewBag.Products as List<JsonElement> ?? new();
+}
+
+<style>
+    .admin-card {
+        border-radius: 16px;
+        border: none;
+        transition: all 0.3s ease;
+    }
+
+    .admin-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
+    }
+
+    .stat-card {
+        border-radius: 16px;
+        color: white;
+        padding: 25px;
+        text-align: center;
+    }
+</style>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="fw-bold mb-0">⚙️ Admin Dashboard</h2>
+        <p class="text-muted small">Manage users, products and inventory</p>
+    </div>
+    <a href="/Products" class="btn btn-outline-primary rounded-pill px-4">
+        <i class="bi bi-grid me-1"></i>Back to Shop
+    </a>
+</div>
+
+<!-- Stats -->
+<div class="row g-3 mb-4">
+    <div class="col-md-3">
+        <div class="stat-card shadow" style="background:linear-gradient(135deg,#667eea,#764ba2);">
+            <div style="font-size:2.5rem;">👥</div>
+            <div style="font-size:2rem; font-weight:800;">@users.Count</div>
+            <div class="opacity-75">Total Users</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card shadow" style="background:linear-gradient(135deg,#f093fb,#f5576c);">
+            <div style="font-size:2.5rem;">📦</div>
+            <div style="font-size:2rem; font-weight:800;">@products.Count</div>
+            <div class="opacity-75">Total Products</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card shadow" style="background:linear-gradient(135deg,#4facfe,#00f2fe);">
+            <div style="font-size:2.5rem;">👑</div>
+            <div style="font-size:2rem; font-weight:800;">
+                @users.Count(u => u.TryGetProperty("role", out var r) && r.GetString() == "Admin")
+            </div>
+            <div class="opacity-75">Admins</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card shadow" style="background:linear-gradient(135deg,#43e97b,#38f9d7);">
+            <div style="font-size:2.5rem;">🛒</div>
+            <div style="font-size:2rem; font-weight:800;">
+                @products.Sum(p => p.TryGetProperty("stock", out var s) ? s.GetInt32() : 0)
+            </div>
+            <div class="opacity-75">Total Stock</div>
+        </div>
+    </div>
+</div>
+
+<!-- Users Management -->
+<div class="card admin-card shadow-sm mb-4">
+    <div class="card-body p-4">
+        <h5 class="fw-bold mb-3">
+            <i class="bi bi-people-fill text-primary me-2"></i>User Management
+        </h5>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var user in users)
+                    {
+                        var email = user.TryGetProperty("email", out var e) ? e.GetString() : "";
+                        var username = user.TryGetProperty("username", out var u) ? u.GetString() : "";
+                        var role = user.TryGetProperty("role", out var r) ? r.GetString() : "Customer";
+                        <tr>
+                            <td>
+                                <i class="bi bi-person-circle text-primary me-2"></i>
+                                @username
+                            </td>
+                            <td class="text-muted">@email</td>
+                            <td>
+                                <span class="badge rounded-pill @(role == "Admin" ? "bg-danger" : "bg-primary")">
+                                    @(role == "Admin" ? "👑 Admin" : "👤 Customer")
+                                </span>
+                            </td>
+                            <td>
+                                <div class="d-flex gap-2">
+                                    @if (role != "Admin")
+                                    {
+                                        <form method="post" action="/Admin/AssignRole">
+                                            <input type="hidden" name="email" value="@email" />
+                                            <input type="hidden" name="role" value="Admin" />
+                                            <button class="btn btn-sm btn-warning rounded-pill">
+                                                👑 Make Admin
+                                            </button>
+                                        </form>
+                                    }
+                                    else
+                                    {
+                                        <form method="post" action="/Admin/AssignRole">
+                                            <input type="hidden" name="email" value="@email" />
+                                            <input type="hidden" name="role" value="Customer" />
+                                            <button class="btn btn-sm btn-outline-secondary rounded-pill">
+                                                👤 Make Customer
+                                            </button>
+                                        </form>
+                                    }
+                                    @if (email != "admin@store.com")
+                                    {
+                                        <form method="post" action="/Admin/DeleteUser"
+                                              onsubmit="return confirm('Delete user @email?')">
+                                            <input type="hidden" name="email" value="@email" />
+                                            <button class="btn btn-sm btn-outline-danger rounded-pill">
+                                                🗑️ Delete
+                                            </button>
+                                        </form>
+                                    }
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Stock Management -->
+<div class="card admin-card shadow-sm mb-4">
+    <div class="card-body p-4">
+        <h5 class="fw-bold mb-3">
+            <i class="bi bi-box-seam text-success me-2"></i>Stock Management
+        </h5>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Product</th>
+                        <th>Category</th>
+                        <th>Price</th>
+                        <th>Current Stock</th>
+                        <th>Update Stock</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var product in products)
+                    {
+                        var productId = product.GetProperty("id").GetInt32();
+                        var name = product.GetProperty("name").GetString();
+                        var stock = product.GetProperty("stock").GetInt32();
+                        var price = product.GetProperty("price").GetDecimal();
+                        var category = product.TryGetProperty("category", out var cat)
+                            ? cat.GetString() : "General";
+                        <tr>
+                            <td class="fw-bold">@name</td>
+                            <td>
+                                <span class="badge rounded-pill bg-light text-dark">
+                                    @category
+                                </span>
+                            </td>
+                            <td class="text-primary fw-bold">$@price</td>
+                            <td>
+                                <span
+                                    class="badge @(stock <= 5 ? "bg-danger" : stock <= 20 ? "bg-warning" : "bg-success") rounded-pill px-3">
+                                    @stock @(stock <= 5 ? "⚠️ Low" : "")
+                                </span>
+                            </td>
+                            <td>
+                                <form method="post" action="/Admin/UpdateStock" class="d-flex gap-2 align-items-center">
+                                    <input type="hidden" name="productId" value="@productId" />
+                                    <input type="number" name="stock" value="@stock"
+                                           class="form-control form-control-sm rounded-pill" style="width:80px;" min="0" />
+                                    <button type="submit" class="btn btn-sm btn-success rounded-pill px-3">
+                                        Update
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

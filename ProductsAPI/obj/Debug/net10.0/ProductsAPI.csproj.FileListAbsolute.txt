@@ -154,3 +154,4 @@
 /Users/ansaf/Documents/Adv App Dev/ECommerceApp/ProductsAPI/obj/Debug/net10.0/ProductsAPI.pdb
 /Users/ansaf/Documents/Adv App Dev/ECommerceApp/ProductsAPI/obj/Debug/net10.0/ProductsAPI.genruntimeconfig.cache
 /Users/ansaf/Documents/Adv App Dev/ECommerceApp/ProductsAPI/obj/Debug/net10.0/ref/ProductsAPI.dll
+/Users/ansaf/Documents/Adv App Dev/ECommerceApp/ProductsAPI/obj/Debug/net10.0/ProductsAPI.sourcelink.json

@@ -1,0 +1,23 @@
+{
+  "version": 2,
+  "dgSpecHash": "lqcMsLa1r4g=",
+  "success": true,
+  "projectFilePath": "/Users/ansaf/Documents/Adv App Dev/ECommerceApp/FrontendUI/FrontendUI.csproj",
+  "expectedPackageFiles": [
+    "/Users/ansaf/.nuget/packages/microsoft.aspnetcore.authentication.cookies/2.3.11/microsoft.aspnetcore.authentication.cookies.2.3.11.nupkg.sha512"
+  ],
+  "logs": [
+    {
+      "code": "NU1510",
+      "level": "Warning",
+      "message": "PackageReference Microsoft.AspNetCore.Authentication.Cookies will not be pruned. Consider removing this package from your dependencies, as it is likely unnecessary.",
+      "projectPath": "/Users/ansaf/Documents/Adv App Dev/ECommerceApp/FrontendUI/FrontendUI.csproj",
+      "warningLevel": 1,
+      "filePath": "/Users/ansaf/Documents/Adv App Dev/ECommerceApp/FrontendUI/FrontendUI.csproj",
+      "libraryId": "Microsoft.AspNetCore.Authentication.Cookies",
+      "targetGraphs": [
+        "net10.0"
+      ]
+    }
+  ]
+}

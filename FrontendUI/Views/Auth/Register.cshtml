@@ -1,0 +1,65 @@
+@{
+    ViewData["Title"] = "Register";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-5">
+        <div class="card shadow">
+            <div class="card-body p-4">
+                <h3 class="text-center mb-4"><i class="bi bi-person-plus"></i> Register</h3>
+
+                @if (ViewBag.Error != null)
+                {
+                    <div class="alert alert-danger">@ViewBag.Error</div>
+                }
+
+                <form method="post">
+                    <div class="mb-3">
+                        <label class="form-label">Username</label>
+                        <input type="text" name="username" class="form-control" placeholder="Choose a username" required
+                               minlength="3" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Email</label>
+                        <input type="email" name="email" class="form-control" placeholder="Enter your email" required />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Password</label>
+                        <div class="input-group">
+                            <input type="password" name="password" id="passwordInput" class="form-control"
+                                   placeholder="Min 6 chars, include uppercase & symbol" required minlength="6" />
+                            <button class="btn btn-outline-secondary" type="button" onclick="togglePassword()">
+                                <i class="bi bi-eye" id="eyeIcon"></i>
+                            </button>
+                        </div>
+                        <small class="text-muted">Minimum 6 characters e.g. test123</small>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="bi bi-person-plus"></i> Register
+                    </button>
+                </form>
+
+                <hr />
+                <p class="text-center mb-0">
+                    Already have an account?
+                    <a href="/Auth/Login">Login here</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function togglePassword() {
+        const input = document.getElementById('passwordInput');
+        const icon = document.getElementById('eyeIcon');
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.classList.remove('bi-eye');
+            icon.classList.add('bi-eye-slash');
+        } else {
+            input.type = 'password';
+            icon.classList.remove('bi-eye-slash');
+            icon.classList.add('bi-eye');
+        }
+    }
+</script>

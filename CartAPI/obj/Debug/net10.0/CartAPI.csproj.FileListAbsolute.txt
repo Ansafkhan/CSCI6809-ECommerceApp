@@ -154,3 +154,5 @@
 /Users/ansaf/Documents/Adv App Dev/ECommerceApp/CartAPI/obj/Debug/net10.0/CartAPI.pdb
 /Users/ansaf/Documents/Adv App Dev/ECommerceApp/CartAPI/obj/Debug/net10.0/CartAPI.genruntimeconfig.cache
 /Users/ansaf/Documents/Adv App Dev/ECommerceApp/CartAPI/obj/Debug/net10.0/ref/CartAPI.dll
+/Users/ansaf/Documents/Adv App Dev/ECommerceApp/CartAPI/bin/Debug/net10.0/RabbitMQ.Client.dll
+/Users/ansaf/Documents/Adv App Dev/ECommerceApp/CartAPI/obj/Debug/net10.0/CartAPI.sourcelink.json

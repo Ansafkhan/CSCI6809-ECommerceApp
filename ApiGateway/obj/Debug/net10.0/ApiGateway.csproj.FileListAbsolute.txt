@@ -34,3 +34,4 @@
 /Users/ansaf/Documents/Adv App Dev/ECommerceApp/ApiGateway/obj/Debug/net10.0/ApiGateway.pdb
 /Users/ansaf/Documents/Adv App Dev/ECommerceApp/ApiGateway/obj/Debug/net10.0/ApiGateway.genruntimeconfig.cache
 /Users/ansaf/Documents/Adv App Dev/ECommerceApp/ApiGateway/obj/Debug/net10.0/ref/ApiGateway.dll
+/Users/ansaf/Documents/Adv App Dev/ECommerceApp/ApiGateway/obj/Debug/net10.0/ApiGateway.sourcelink.json

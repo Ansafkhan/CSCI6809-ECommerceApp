@@ -60,5 +60,40 @@ namespace ProductsAPI.Controllers
             await _db.SaveChangesAsync();
             return Ok("Product deleted");
         }
+        // PUT /products/{id}
+        [Authorize]
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(int id, [FromBody] Product product)
+        {
+            var existing = await _db.Products.FindAsync(id);
+            if (existing == null) return NotFound();
+
+            existing.Name = product.Name;
+            existing.Description = product.Description;
+            existing.Price = product.Price;
+            existing.Stock = product.Stock;
+            existing.Category = product.Category;
+            await _db.SaveChangesAsync();
+            return Ok(existing);
+        }
+        // POST /products/updatestock (Update stock)
+        [Authorize]
+        [HttpPost("updatestock")]
+        public async Task<IActionResult> UpdateStock([FromBody] UpdateStockRequest request)
+        {
+            var existing = await _db.Products.FindAsync(request.Id);
+            if (existing == null) return NotFound();
+
+            existing.Stock = request.Stock;
+            await _db.SaveChangesAsync();
+            return Ok(existing);
+        }
+
+        public class UpdateStockRequest
+        {
+            public int Id { get; set; }
+            public int Stock { get; set; }
+        }
+
     }
 }

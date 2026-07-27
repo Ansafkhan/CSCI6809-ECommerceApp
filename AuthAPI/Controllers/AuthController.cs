@@ -5,6 +5,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using AuthAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AuthAPI.Controllers
 {
@@ -56,13 +57,61 @@ namespace AuthAPI.Controllers
             var token = new JwtSecurityToken(
                 claims: claims,
                 expires: DateTime.UtcNow.AddHours(2),
-                signingCredentials: new SigningCredentials(key, SecurityAlgorithms.HmacSha256)
+                signingCredentials: new SigningCredentials(
+                    key, SecurityAlgorithms.HmacSha256)
             );
 
             return Ok(new { token = new JwtSecurityTokenHandler().WriteToken(token) });
+        }
+
+        // GET /auth/users (Admin only)
+        [Authorize(Roles = "Admin")]
+        [HttpGet("users")]
+        public async Task<IActionResult> GetAllUsers()
+        {
+            var users = _userManager.Users.ToList();
+            var result = new List<object>();
+            foreach (var user in users)
+            {
+                var roles = await _userManager.GetRolesAsync(user);
+                result.Add(new
+                {
+                    id = user.Id,
+                    username = user.UserName,
+                    email = user.Email,
+                    role = roles.FirstOrDefault() ?? "Customer"
+                });
+            }
+            return Ok(result);
+        }
+
+        // POST /auth/assignrole (Admin only)
+        [Authorize(Roles = "Admin")]
+        [HttpPost("assignrole")]
+        public async Task<IActionResult> AssignRole([FromBody] AssignRoleDto dto)
+        {
+            var user = await _userManager.FindByEmailAsync(dto.Email);
+            if (user == null) return NotFound("User not found");
+
+            var currentRoles = await _userManager.GetRolesAsync(user);
+            await _userManager.RemoveFromRolesAsync(user, currentRoles);
+            await _userManager.AddToRoleAsync(user, dto.Role);
+            return Ok($"Role {dto.Role} assigned to {dto.Email}");
+        }
+
+        // DELETE /auth/users/{email} (Admin only)
+        [Authorize(Roles = "Admin")]
+        [HttpDelete("users/{email}")]
+        public async Task<IActionResult> DeleteUser(string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null) return NotFound("User not found");
+            await _userManager.DeleteAsync(user);
+            return Ok("User deleted");
         }
     }
 
     public record RegisterDto(string Username, string Email, string Password);
     public record LoginDto(string Email, string Password);
+    public record AssignRoleDto(string Email, string Role);
 }

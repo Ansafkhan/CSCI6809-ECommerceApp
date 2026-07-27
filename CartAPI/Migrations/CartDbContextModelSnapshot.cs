@@ -25,6 +25,10 @@ namespace CartAPI.Migrations
                     b.Property<int>("ProductId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("ProductName")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<int>("Quantity")
                         .HasColumnType("INTEGER");
 

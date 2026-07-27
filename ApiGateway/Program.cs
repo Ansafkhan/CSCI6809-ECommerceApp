@@ -33,3 +33,8 @@ app.MapReverseProxy();
 app.MapHealthChecks("/health");
 
 app.Run();
+
+
+// docker compose stop frontend-ui
+// docker compose build --no-cache frontend-ui
+// docker compose up -d frontend-ui

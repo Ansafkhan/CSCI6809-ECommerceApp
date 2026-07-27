@@ -1,0 +1,385 @@
+﻿@{
+    ViewData["Title"] = "Home";
+}
+
+<style>
+    @@keyframes fadeInUp {
+        from {
+            transform: translateY(40px);
+            opacity: 0;
+        }
+
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+
+    @@keyframes float {
+
+        0%,
+        100% {
+            transform: translateY(0px);
+        }
+
+        50% {
+            transform: translateY(-15px);
+        }
+    }
+
+    @@keyframes pulse {
+
+        0%,
+        100% {
+            transform: scale(1);
+        }
+
+        50% {
+            transform: scale(1.05);
+        }
+    }
+
+    @@keyframes slideInLeft {
+        from {
+            transform: translateX(-50px);
+            opacity: 0;
+        }
+
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+
+    @@keyframes slideInRight {
+        from {
+            transform: translateX(50px);
+            opacity: 0;
+        }
+
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+
+    @@keyframes gradientShift {
+        0% {
+            background-position: 0% 50%;
+        }
+
+        50% {
+            background-position: 100% 50%;
+        }
+
+        100% {
+            background-position: 0% 50%;
+        }
+    }
+
+    @@keyframes sparkle {
+
+        0%,
+        100% {
+            opacity: 0;
+            transform: scale(0);
+        }
+
+        50% {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    .hero-section {
+        background: linear-gradient(-45deg, #667eea, #764ba2, #f093fb, #4facfe);
+        background-size: 400% 400%;
+        animation: gradientShift 8s ease infinite;
+        border-radius: 24px;
+        padding: 80px 40px;
+        color: white;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .hero-section::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 60%);
+        animation: pulse 4s ease-in-out infinite;
+    }
+
+    .hero-title {
+        font-size: 3.5rem;
+        font-weight: 800;
+        animation: fadeInUp 0.8s ease both;
+        text-shadow: 0 2px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .hero-subtitle {
+        font-size: 1.3rem;
+        animation: fadeInUp 0.8s ease 0.2s both;
+        opacity: 0.9;
+    }
+
+    .hero-btn {
+        animation: fadeInUp 0.8s ease 0.4s both;
+        background: white;
+        color: #667eea;
+        font-weight: 700;
+        border: none;
+        padding: 14px 35px;
+        border-radius: 50px;
+        font-size: 1.1rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    .hero-btn:hover {
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        color: #764ba2;
+    }
+
+    .floating-icon {
+        animation: float 3s ease-in-out infinite;
+        font-size: 5rem;
+    }
+
+    .feature-card {
+        border-radius: 20px;
+        border: none;
+        transition: all 0.3s ease;
+        animation: fadeInUp 0.8s ease both;
+    }
+
+    .feature-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1) !important;
+    }
+
+    .team-card {
+        border-radius: 20px;
+        border: none;
+        transition: all 0.3s ease;
+        overflow: hidden;
+    }
+
+    .team-card:hover {
+        transform: translateY(-8px) rotate(1deg);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12) !important;
+    }
+
+    .team-avatar {
+        width: 90px;
+        height: 90px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.5rem;
+        margin: 0 auto 15px;
+        transition: transform 0.3s ease;
+    }
+
+    .team-card:hover .team-avatar {
+        transform: scale(1.1) rotate(-5deg);
+    }
+
+    .stats-section {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 24px;
+        color: white;
+        padding: 50px 30px;
+        animation: fadeInUp 0.8s ease 0.6s both;
+    }
+
+    .stat-item {
+        text-align: center;
+        padding: 20px;
+    }
+
+    .stat-number {
+        font-size: 2.5rem;
+        font-weight: 800;
+    }
+
+    .sparkle {
+        position: absolute;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        animation: sparkle 2s ease-in-out infinite;
+    }
+</style>
+
+<!-- Hero Section -->
+<div class="hero-section text-center mb-5 position-relative">
+    <!-- Sparkles -->
+    <div class="sparkle bg-white" style="top:10%; left:10%; animation-delay:0s;"></div>
+    <div class="sparkle bg-white" style="top:20%; right:15%; animation-delay:0.5s;"></div>
+    <div class="sparkle bg-white" style="bottom:20%; left:20%; animation-delay:1s;"></div>
+    <div class="sparkle bg-white" style="bottom:15%; right:10%; animation-delay:1.5s;"></div>
+
+    <div class="floating-icon mb-3">🛍️</div>
+    <h1 class="hero-title">Welcome to ECommerce Store</h1>
+    <p class="hero-subtitle mb-4">
+        Your one-stop shop for Electronics, Fashion & Home essentials
+    </p>
+    <div class="d-flex gap-3 justify-content-center flex-wrap">
+        <a href="/Products" class="btn hero-btn">
+            <i class="bi bi-grid me-2"></i>Browse Products
+        </a>
+        @if (Context.Session.GetString("JWTToken") == null)
+        {
+            <a href="/Auth/Register" class="btn btn-outline-light rounded-pill px-4 py-3 fs-5">
+                <i class="bi bi-person-plus me-2"></i>Get Started
+            </a>
+        }
+    </div>
+</div>
+
+<!-- Stats Section -->
+<div class="stats-section mb-5">
+    <div class="row">
+        <div class="col-md-3 stat-item">
+            <div class="stat-number">15+</div>
+            <div class="opacity-75">Products</div>
+        </div>
+        <div class="col-md-3 stat-item">
+            <div class="stat-number">3</div>
+            <div class="opacity-75">Categories</div>
+        </div>
+        <div class="col-md-3 stat-item">
+            <div class="stat-number">100%</div>
+            <div class="opacity-75">Secure</div>
+        </div>
+        <div class="col-md-3 stat-item">
+            <div class="stat-number">24/7</div>
+            <div class="opacity-75">Support</div>
+        </div>
+    </div>
+</div>
+
+<!-- Features Section -->
+<h3 class="fw-bold text-center mb-4">Why Choose Us?</h3>
+<div class="row g-4 mb-5">
+    <div class="col-md-4">
+        <div class="card feature-card shadow-sm p-4 h-100" style="animation-delay:0.1s;">
+            <div class="text-center">
+                <div style="font-size:3rem; margin-bottom:15px;">🔐</div>
+                <h5 class="fw-bold">Secure Shopping</h5>
+                <p class="text-muted">JWT secured transactions with role-based access control</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card feature-card shadow-sm p-4 h-100" style="animation-delay:0.2s;">
+            <div class="text-center">
+                <div style="font-size:3rem; margin-bottom:15px;">⚡</div>
+                <h5 class="fw-bold">Fast & Reliable</h5>
+                <p class="text-muted">Powered by microservices architecture for maximum performance</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card feature-card shadow-sm p-4 h-100" style="animation-delay:0.3s;">
+            <div class="text-center">
+                <div style="font-size:3rem; margin-bottom:15px;">🚀</div>
+                <h5 class="fw-bold">Smart Inventory</h5>
+                <p class="text-muted">Real-time stock updates with automated inventory management</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Categories Preview -->
+<h3 class="fw-bold text-center mb-4">Shop by Category</h3>
+<div class="row g-4 mb-5">
+    <div class="col-md-4">
+        <a href="/Products" class="text-decoration-none">
+            <div class="card border-0 shadow-sm rounded-4 p-4 text-center h-100"
+                 style="background:linear-gradient(135deg,#E3F2FD,#BBDEFB); transition:all 0.3s ease;"
+                 onmouseover="this.style.transform='translateY(-8px)'" onmouseout="this.style.transform='translateY(0)'">
+                <div style="font-size:3.5rem;">💻</div>
+                <h5 class="fw-bold mt-3" style="color:#1976d2;">Electronics</h5>
+                <p class="text-muted small">Phones, Laptops, Headphones & more</p>
+            </div>
+        </a>
+    </div>
+    <div class="col-md-4">
+        <a href="/Products" class="text-decoration-none">
+            <div class="card border-0 shadow-sm rounded-4 p-4 text-center h-100"
+                 style="background:linear-gradient(135deg,#FCE4EC,#F8BBD0); transition:all 0.3s ease;"
+                 onmouseover="this.style.transform='translateY(-8px)'" onmouseout="this.style.transform='translateY(0)'">
+                <div style="font-size:3.5rem;">👕</div>
+                <h5 class="fw-bold mt-3" style="color:#e91e8c;">Fashion</h5>
+                <p class="text-muted small">Clothes, Shoes, Accessories & more</p>
+            </div>
+        </a>
+    </div>
+    <div class="col-md-4">
+        <a href="/Products" class="text-decoration-none">
+            <div class="card border-0 shadow-sm rounded-4 p-4 text-center h-100"
+                 style="background:linear-gradient(135deg,#FFF3E0,#FFE0B2); transition:all 0.3s ease;"
+                 onmouseover="this.style.transform='translateY(-8px)'" onmouseout="this.style.transform='translateY(0)'">
+                <div style="font-size:3.5rem;">🏠</div>
+                <h5 class="fw-bold mt-3" style="color:#ff6b35;">Home & Kitchen</h5>
+                <p class="text-muted small">Appliances, Cookware & more</p>
+            </div>
+        </a>
+    </div>
+</div>
+
+<!-- Team Section -->
+<h3 class="fw-bold text-center mb-2">Meet Our Team</h3>
+<p class="text-muted text-center mb-4">The brilliant minds behind this project</p>
+<div class="row g-4 mb-5">
+    <div class="col-md-4">
+        <div class="card team-card shadow-sm p-4 text-center h-100" style="border-top: 4px solid #667eea;">
+            <div class="team-avatar" style="background:linear-gradient(135deg,#667eea,#764ba2);">
+                👨‍💻
+            </div>
+            <h5 class="fw-bold">Ansaf Khan</h5>
+            <p class="text-muted small mb-2">Backend Developer</p>
+            <div class="d-flex gap-2 justify-content-center flex-wrap">
+                <span class="badge rounded-pill" style="background:#E8F4FD; color:#1a73e8;">Auth API</span>
+                <span class="badge rounded-pill" style="background:#EDE7F6; color:#673ab7;">Inventory API</span>
+                <span class="badge rounded-pill" style="background:#E8F5E9; color:#2e7d32;">RabbitMQ</span>
+                <span class="badge rounded-pill" style="background:#FFF3E0; color:#e65100;">Docker</span>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card team-card shadow-sm p-4 text-center h-100" style="border-top: 4px solid #e91e8c;">
+            <div class="team-avatar" style="background:linear-gradient(135deg,#e91e8c,#f093fb);">
+                👩‍💻
+            </div>
+            <h5 class="fw-bold">Kirandeep Kaur</h5>
+            <p class="text-muted small mb-2">UI/UX & Documentation</p>
+            <div class="d-flex gap-2 justify-content-center flex-wrap">
+                <span class="badge rounded-pill" style="background:#FCE4EC; color:#e91e8c;">Diagrams</span>
+                <span class="badge rounded-pill" style="background:#E8F5E9; color:#2e7d32;">Docker Compose</span>
+                <span class="badge rounded-pill" style="background:#E3F2FD; color:#1976d2;">Documentation</span>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card team-card shadow-sm p-4 text-center h-100" style="border-top: 4px solid #ff6b35;">
+            <div class="team-avatar" style="background:linear-gradient(135deg,#ff6b35,#ffa726);">
+                👨‍💻
+            </div>
+            <h5 class="fw-bold">Sizhan Xu</h5>
+            <p class="text-muted small mb-2">Frontend Developer</p>
+            <div class="d-flex gap-2 justify-content-center flex-wrap">
+                <span class="badge rounded-pill" style="background:#E3F2FD; color:#1976d2;">Products API</span>
+                <span class="badge rounded-pill" style="background:#FCE4EC; color:#e91e8c;">Cart API</span>
+                <span class="badge rounded-pill" style="background:#FFF3E0; color:#e65100;">Frontend UI</span>
+            </div>
+        </div>
+    </div>
+</div>

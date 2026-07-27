@@ -29,7 +29,7 @@ namespace PriceAPI.Controllers
 
             var productIds = cartItems.Select(c => c.ProductId).ToList();
             var productResponse = await _httpClient.GetAsync(
-                $"http://localhost:5048/products/byIds?productIds={string.Join(",", productIds)}");
+                $"{Environment.GetEnvironmentVariable("PRODUCTS_URL") ?? "http://localhost:5048"}/products/byIds?productIds={string.Join(",", productIds)}");
 
             if (!productResponse.IsSuccessStatusCode)
                 return BadRequest("Could not fetch products");

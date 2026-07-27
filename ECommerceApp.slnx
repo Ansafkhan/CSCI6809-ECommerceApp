@@ -2,6 +2,8 @@
   <Project Path="ApiGateway/ApiGateway.csproj" />
   <Project Path="AuthAPI/AuthAPI.csproj" />
   <Project Path="CartAPI/CartAPI.csproj" />
+  <Project Path="FrontendUI/FrontendUI.csproj" />
+  <Project Path="InventoryAPI/InventoryAPI.csproj" />
   <Project Path="PriceAPI/PriceAPI.csproj" />
   <Project Path="ProductsAPI/ProductsAPI.csproj" />
 </Solution>

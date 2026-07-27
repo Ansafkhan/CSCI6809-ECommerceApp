@@ -1,0 +1,128 @@
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    networks:
+      - ecommerce-network
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  auth-api:
+    build: ./AuthAPI
+    container_name: auth-api
+    ports:
+      - "5155:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+    volumes:
+      - ./AuthAPI/auth.db:/app/auth.db
+    networks:
+      - ecommerce-network
+
+  products-api:
+    build: ./ProductsAPI
+    container_name: products-api
+    ports:
+      - "5048:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+    volumes:
+      - ./ProductsAPI/products.db:/app/products.db
+    networks:
+      - ecommerce-network
+
+  cart-api:
+    build: ./CartAPI
+    container_name: cart-api
+    ports:
+      - "5106:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - RabbitMQ__Host=rabbitmq
+      - PRODUCTS_URL=http://products-api:80
+      - PRICE_URL=http://price-api:80
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    volumes:
+      - ./CartAPI/cart.db:/app/cart.db
+    networks:
+      - ecommerce-network
+
+  price-api:
+    build: ./PriceAPI
+    container_name: price-api
+    ports:
+      - "5097:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - PRODUCTS_URL=http://products-api:80
+    networks:
+      - ecommerce-network
+
+  inventory-api:
+    build: ./InventoryAPI
+    container_name: inventory-api
+    ports:
+      - "5102:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - RabbitMQ__Host=rabbitmq
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    volumes:
+      - ./InventoryAPI/inventory.db:/app/inventory.db
+    networks:
+      - ecommerce-network
+
+  api-gateway:
+    build: ./ApiGateway
+    container_name: api-gateway
+    ports:
+      - "5134:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+    depends_on:
+      - auth-api
+      - products-api
+      - cart-api
+      - price-api
+    networks:
+      - ecommerce-network
+
+  frontend-ui:
+    build: ./FrontendUI
+    container_name: frontend-ui
+    ports:
+      - "5144:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - GATEWAY_URL=http://api-gateway:80
+      - PRODUCTS_API_URL=http://products-api:80
+    volumes:
+      - ./FrontendUI/wwwroot/images:/app/wwwroot/images
+    depends_on:
+      - api-gateway
+    networks:
+      - ecommerce-network
+
+networks:
+  ecommerce-network:
+    driver: bridge
