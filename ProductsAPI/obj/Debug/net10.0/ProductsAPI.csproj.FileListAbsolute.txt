@@ -139,6 +139,7 @@
 /Users/ansaf/Documents/Adv App Dev/ECommerceApp/ProductsAPI/obj/Debug/net10.0/ProductsAPI.csproj.CoreCompileInputs.cache
 /Users/ansaf/Documents/Adv App Dev/ECommerceApp/ProductsAPI/obj/Debug/net10.0/ProductsAPI.MvcApplicationPartsAssemblyInfo.cs
 /Users/ansaf/Documents/Adv App Dev/ECommerceApp/ProductsAPI/obj/Debug/net10.0/ProductsAPI.MvcApplicationPartsAssemblyInfo.cache
+/Users/ansaf/Documents/Adv App Dev/ECommerceApp/ProductsAPI/obj/Debug/net10.0/ProductsAPI.sourcelink.json
 /Users/ansaf/Documents/Adv App Dev/ECommerceApp/ProductsAPI/obj/Debug/net10.0/rjimswa.dswa.cache.json
 /Users/ansaf/Documents/Adv App Dev/ECommerceApp/ProductsAPI/obj/Debug/net10.0/rjsmrazor.dswa.cache.json
 /Users/ansaf/Documents/Adv App Dev/ECommerceApp/ProductsAPI/obj/Debug/net10.0/rjsmcshtml.dswa.cache.json
@@ -154,4 +155,3 @@
 /Users/ansaf/Documents/Adv App Dev/ECommerceApp/ProductsAPI/obj/Debug/net10.0/ProductsAPI.pdb
 /Users/ansaf/Documents/Adv App Dev/ECommerceApp/ProductsAPI/obj/Debug/net10.0/ProductsAPI.genruntimeconfig.cache
 /Users/ansaf/Documents/Adv App Dev/ECommerceApp/ProductsAPI/obj/Debug/net10.0/ref/ProductsAPI.dll
-/Users/ansaf/Documents/Adv App Dev/ECommerceApp/ProductsAPI/obj/Debug/net10.0/ProductsAPI.sourcelink.json

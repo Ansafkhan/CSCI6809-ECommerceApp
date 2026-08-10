@@ -15,6 +15,7 @@ namespace AuthAPI.Controllers
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly string _jwtKey = "ThisIsASecretKeyForJWTToken12345!";
+        private const string MainAdmin = "admin@store.com";
 
         public AuthController(UserManager<AppUser> userManager)
         {
@@ -25,11 +26,10 @@ namespace AuthAPI.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterDto dto)
         {
-            // Check if email already exists
             var existingUser = await _userManager.FindByEmailAsync(dto.Email);
             if (existingUser != null)
                 return BadRequest(new[] { new { code = "DuplicateEmail",
-            description = "This email is already registered." } });
+                    description = "This email is already registered." } });
 
             var user = new AppUser { UserName = dto.Username, Email = dto.Email };
             var result = await _userManager.CreateAsync(user, dto.Password);
@@ -40,7 +40,8 @@ namespace AuthAPI.Controllers
             await _userManager.AddToRoleAsync(user, "Customer");
             return Ok("User registered successfully");
         }
-        // GET /auth/checkusername?username=test (Public)
+
+        // GET /auth/checkusername (Public)
         [HttpGet("checkusername")]
         public async Task<IActionResult> CheckUsername(string username)
         {
@@ -48,7 +49,7 @@ namespace AuthAPI.Controllers
             return Ok(new { taken = user != null });
         }
 
-        // GET /auth/checkemail?email=test@test.com (Public)
+        // GET /auth/checkemail (Public)
         [HttpGet("checkemail")]
         public async Task<IActionResult> CheckEmail(string email)
         {
@@ -111,6 +112,10 @@ namespace AuthAPI.Controllers
         [HttpPost("assignrole")]
         public async Task<IActionResult> AssignRole([FromBody] AssignRoleDto dto)
         {
+            // Protect main admin
+            if (dto.Email.ToLower() == MainAdmin)
+                return BadRequest("Cannot change the role of the main admin!");
+
             var user = await _userManager.FindByEmailAsync(dto.Email);
             if (user == null) return NotFound("User not found");
 
@@ -126,6 +131,11 @@ namespace AuthAPI.Controllers
         public async Task<IActionResult> DeleteUser(string email)
         {
             var decodedEmail = Uri.UnescapeDataString(email);
+
+            // Protect main admin
+            if (decodedEmail.ToLower() == MainAdmin)
+                return BadRequest("Cannot delete the main admin!");
+
             var user = await _userManager.FindByEmailAsync(decodedEmail);
             if (user == null) return NotFound("User not found");
             await _userManager.DeleteAsync(user);

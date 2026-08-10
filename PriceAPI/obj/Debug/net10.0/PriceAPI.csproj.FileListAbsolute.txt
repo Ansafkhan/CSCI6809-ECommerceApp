@@ -24,6 +24,7 @@
 /Users/ansaf/Documents/Adv App Dev/ECommerceApp/PriceAPI/obj/Debug/net10.0/PriceAPI.csproj.CoreCompileInputs.cache
 /Users/ansaf/Documents/Adv App Dev/ECommerceApp/PriceAPI/obj/Debug/net10.0/PriceAPI.MvcApplicationPartsAssemblyInfo.cs
 /Users/ansaf/Documents/Adv App Dev/ECommerceApp/PriceAPI/obj/Debug/net10.0/PriceAPI.MvcApplicationPartsAssemblyInfo.cache
+/Users/ansaf/Documents/Adv App Dev/ECommerceApp/PriceAPI/obj/Debug/net10.0/PriceAPI.sourcelink.json
 /Users/ansaf/Documents/Adv App Dev/ECommerceApp/PriceAPI/obj/Debug/net10.0/rjimswa.dswa.cache.json
 /Users/ansaf/Documents/Adv App Dev/ECommerceApp/PriceAPI/obj/Debug/net10.0/rjsmrazor.dswa.cache.json
 /Users/ansaf/Documents/Adv App Dev/ECommerceApp/PriceAPI/obj/Debug/net10.0/rjsmcshtml.dswa.cache.json
@@ -39,4 +40,3 @@
 /Users/ansaf/Documents/Adv App Dev/ECommerceApp/PriceAPI/obj/Debug/net10.0/PriceAPI.pdb
 /Users/ansaf/Documents/Adv App Dev/ECommerceApp/PriceAPI/obj/Debug/net10.0/PriceAPI.genruntimeconfig.cache
 /Users/ansaf/Documents/Adv App Dev/ECommerceApp/PriceAPI/obj/Debug/net10.0/ref/PriceAPI.dll
-/Users/ansaf/Documents/Adv App Dev/ECommerceApp/PriceAPI/obj/Debug/net10.0/PriceAPI.sourcelink.json

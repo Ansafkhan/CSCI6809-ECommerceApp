@@ -33,6 +33,7 @@
 /Users/ansaf/Documents/Adv App Dev/ECommerceApp/CartAPI/bin/Debug/net10.0/Microsoft.VisualStudio.SolutionPersistence.dll
 /Users/ansaf/Documents/Adv App Dev/ECommerceApp/CartAPI/bin/Debug/net10.0/Mono.TextTemplating.dll
 /Users/ansaf/Documents/Adv App Dev/ECommerceApp/CartAPI/bin/Debug/net10.0/Newtonsoft.Json.dll
+/Users/ansaf/Documents/Adv App Dev/ECommerceApp/CartAPI/bin/Debug/net10.0/RabbitMQ.Client.dll
 /Users/ansaf/Documents/Adv App Dev/ECommerceApp/CartAPI/bin/Debug/net10.0/SQLitePCLRaw.batteries_v2.dll
 /Users/ansaf/Documents/Adv App Dev/ECommerceApp/CartAPI/bin/Debug/net10.0/SQLitePCLRaw.core.dll
 /Users/ansaf/Documents/Adv App Dev/ECommerceApp/CartAPI/bin/Debug/net10.0/SQLitePCLRaw.provider.e_sqlite3.dll
@@ -139,6 +140,7 @@
 /Users/ansaf/Documents/Adv App Dev/ECommerceApp/CartAPI/obj/Debug/net10.0/CartAPI.csproj.CoreCompileInputs.cache
 /Users/ansaf/Documents/Adv App Dev/ECommerceApp/CartAPI/obj/Debug/net10.0/CartAPI.MvcApplicationPartsAssemblyInfo.cs
 /Users/ansaf/Documents/Adv App Dev/ECommerceApp/CartAPI/obj/Debug/net10.0/CartAPI.MvcApplicationPartsAssemblyInfo.cache
+/Users/ansaf/Documents/Adv App Dev/ECommerceApp/CartAPI/obj/Debug/net10.0/CartAPI.sourcelink.json
 /Users/ansaf/Documents/Adv App Dev/ECommerceApp/CartAPI/obj/Debug/net10.0/rjimswa.dswa.cache.json
 /Users/ansaf/Documents/Adv App Dev/ECommerceApp/CartAPI/obj/Debug/net10.0/rjsmrazor.dswa.cache.json
 /Users/ansaf/Documents/Adv App Dev/ECommerceApp/CartAPI/obj/Debug/net10.0/rjsmcshtml.dswa.cache.json
@@ -154,5 +156,3 @@
 /Users/ansaf/Documents/Adv App Dev/ECommerceApp/CartAPI/obj/Debug/net10.0/CartAPI.pdb
 /Users/ansaf/Documents/Adv App Dev/ECommerceApp/CartAPI/obj/Debug/net10.0/CartAPI.genruntimeconfig.cache
 /Users/ansaf/Documents/Adv App Dev/ECommerceApp/CartAPI/obj/Debug/net10.0/ref/CartAPI.dll
-/Users/ansaf/Documents/Adv App Dev/ECommerceApp/CartAPI/bin/Debug/net10.0/RabbitMQ.Client.dll
-/Users/ansaf/Documents/Adv App Dev/ECommerceApp/CartAPI/obj/Debug/net10.0/CartAPI.sourcelink.json
