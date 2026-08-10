@@ -25,6 +25,12 @@ namespace AuthAPI.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterDto dto)
         {
+            // Check if email already exists
+            var existingUser = await _userManager.FindByEmailAsync(dto.Email);
+            if (existingUser != null)
+                return BadRequest(new[] { new { code = "DuplicateEmail",
+            description = "This email is already registered." } });
+
             var user = new AppUser { UserName = dto.Username, Email = dto.Email };
             var result = await _userManager.CreateAsync(user, dto.Password);
 
@@ -33,6 +39,21 @@ namespace AuthAPI.Controllers
 
             await _userManager.AddToRoleAsync(user, "Customer");
             return Ok("User registered successfully");
+        }
+        // GET /auth/checkusername?username=test (Public)
+        [HttpGet("checkusername")]
+        public async Task<IActionResult> CheckUsername(string username)
+        {
+            var user = await _userManager.FindByNameAsync(username);
+            return Ok(new { taken = user != null });
+        }
+
+        // GET /auth/checkemail?email=test@test.com (Public)
+        [HttpGet("checkemail")]
+        public async Task<IActionResult> CheckEmail(string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            return Ok(new { taken = user != null });
         }
 
         // POST /auth/login
@@ -104,7 +125,8 @@ namespace AuthAPI.Controllers
         [HttpDelete("users/{email}")]
         public async Task<IActionResult> DeleteUser(string email)
         {
-            var user = await _userManager.FindByEmailAsync(email);
+            var decodedEmail = Uri.UnescapeDataString(email);
+            var user = await _userManager.FindByEmailAsync(decodedEmail);
             if (user == null) return NotFound("User not found");
             await _userManager.DeleteAsync(user);
             return Ok("User deleted");
