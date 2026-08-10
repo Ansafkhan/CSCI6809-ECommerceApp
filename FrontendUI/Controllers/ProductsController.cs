@@ -7,7 +7,8 @@ namespace FrontendUI.Controllers
     public class ProductsController : Controller
     {
         private readonly HttpClient _httpClient;
-        private readonly string _gatewayUrl = Environment.GetEnvironmentVariable("GATEWAY_URL") ?? "http://localhost:5134";
+        private readonly string _gatewayUrl = Environment.GetEnvironmentVariable("GATEWAY_URL")
+            ?? "http://localhost:5134";
 
         public ProductsController(IHttpClientFactory httpClientFactory)
         {
@@ -28,13 +29,10 @@ namespace FrontendUI.Controllers
         // GET /Products
         public async Task<IActionResult> Index()
         {
-            // Don't require login to view products
             SetAuthHeader();
-
             try
             {
                 var response = await _httpClient.GetAsync($"{_gatewayUrl}/products");
-
                 if (!response.IsSuccessStatusCode)
                 {
                     ViewBag.Role = null;
@@ -78,25 +76,8 @@ namespace FrontendUI.Controllers
 
         // POST /Products/Create
         [HttpPost]
-        public async Task<IActionResult> Create(string name,
-     string description, decimal price, int stock, string category)
-        {
-            if (string.IsNullOrEmpty(name) || price <= 0 || stock < 0)
-            {
-                ViewBag.Error = "Please fill all fields correctly";
-                return View();
-            }
-
-            SetAuthHeader();
-            var body = JsonSerializer.Serialize(
-                new { name, description, price, stock, category = category ?? "General" });
-            var content = new StringContent(body, Encoding.UTF8, "application/json");
-            await _httpClient.PostAsync($"{_gatewayUrl}/products", content);
-            return RedirectToAction("Index");
-        }
-        [HttpPost]
         public async Task<IActionResult> Create(string name, string description,
-    decimal price, int stock, string category, IFormFile? imageFile)
+            decimal price, int stock, string category, IFormFile? imageFile)
         {
             if (string.IsNullOrEmpty(name) || price <= 0 || stock < 0)
             {
@@ -116,15 +97,14 @@ namespace FrontendUI.Controllers
             }
 
             SetAuthHeader();
-            var body = JsonSerializer.Serialize(
-                new
-                {
-                    name,
-                    description,
-                    price,
-                    stock,
-                    category = category ?? "General"
-                });
+            var body = JsonSerializer.Serialize(new
+            {
+                name,
+                description,
+                price,
+                stock,
+                category = category ?? "General"
+            });
             var content = new StringContent(body, Encoding.UTF8, "application/json");
             await _httpClient.PostAsync($"{_gatewayUrl}/products", content);
             return RedirectToAction("Index");
@@ -138,6 +118,8 @@ namespace FrontendUI.Controllers
             await _httpClient.DeleteAsync($"{_gatewayUrl}/products/{id}");
             return RedirectToAction("Index");
         }
+
+        // GET /Products/Details
         public async Task<IActionResult> Details(int id)
         {
             SetAuthHeader();

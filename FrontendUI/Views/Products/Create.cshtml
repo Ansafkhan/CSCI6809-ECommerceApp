@@ -6,7 +6,9 @@
     <div class="col-md-6">
         <div class="card border-0 shadow rounded-4">
             <div class="card-body p-5">
-                <h3 class="fw-bold mb-1"><i class="bi bi-plus-circle text-success"></i> Add New Product</h3>
+                <h3 class="fw-bold mb-1">
+                    <i class="bi bi-plus-circle text-success"></i> Add New Product
+                </h3>
                 <p class="text-muted mb-4">Fill in the details below</p>
 
                 @if (ViewBag.Error != null)
@@ -14,7 +16,7 @@
                     <div class="alert alert-danger rounded-3">@ViewBag.Error</div>
                 }
 
-                <form method="post">
+                <form method="post" enctype="multipart/form-data">
                     <div class="mb-3">
                         <label class="form-label fw-semibold">Product Name</label>
                         <input type="text" name="name" class="form-control rounded-3"
@@ -22,22 +24,26 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label fw-semibold">Description</label>
-                        <textarea name="description" class="form-control rounded-3" rows="3"
-                                  placeholder="Describe the product..." required></textarea>
+                        <textarea name="description" class="form-control rounded-3"
+                                  rows="3" placeholder="Describe the product..."
+                                  required></textarea>
                     </div>
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label class="form-label fw-semibold">Price ($)</label>
                             <div class="input-group">
                                 <span class="input-group-text">$</span>
-                                <input type="number" name="price" class="form-control rounded-end-3" step="0.01"
-                                       min="0.01" placeholder="0.00" required />
+                                <input type="number" name="price"
+                                       class="form-control rounded-end-3"
+                                       step="0.01" min="0.01"
+                                       placeholder="0.00" required />
                             </div>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="form-label fw-semibold">Stock</label>
-                            <input type="number" name="stock" class="form-control rounded-3" min="0" placeholder="0"
-                                   required />
+                            <input type="number" name="stock"
+                                   class="form-control rounded-3"
+                                   min="0" placeholder="0" required />
                         </div>
                     </div>
                     <div class="mb-3">
@@ -54,15 +60,18 @@
                         <label class="form-label fw-semibold">
                             Product Image <span class="text-muted">(optional)</span>
                         </label>
-                        <input type="file" name="imageFile" class="form-control rounded-3" accept="image/*"
+                        <input type="file" name="imageFile"
+                               class="form-control rounded-3"
+                               accept="image/*"
                                onchange="previewImage(this)" />
-                        <form method="post" enctype="multipart/form-data">
-                            <div class="mt-2 text-center" id="imagePreview" style="display:none;">
-                                <img id="previewImg" style="width:100px; height:100px; 
-                                object-fit:contain; border-radius:12px;" />
-                            </div>
-                        </form>
-                        <small class="text-muted">Upload a cartoon/illustration image for the product</small>
+                        <div class="mt-2 text-center" id="imagePreview" style="display:none;">
+                            <img id="previewImg"
+                                 style="width:100px; height:100px;
+                                        object-fit:contain; border-radius:12px;" />
+                        </div>
+                        <small class="text-muted">
+                            Upload a cartoon/illustration image for the product
+                        </small>
                     </div>
                     <div class="d-flex gap-2 mt-2">
                         <button type="submit" class="btn btn-success rounded-pill px-4">
@@ -77,15 +86,16 @@
         </div>
     </div>
 </div>
+
 <script>
-    function previewImage(input) {
-        if (input.files && input.files[0]) {
-            const reader = new FileReader();
-            reader.onload = e => {
-                document.getElementById('previewImg').src = e.target.result;
-                document.getElementById('imagePreview').style.display = 'block';
-            };
-            reader.readAsDataURL(input.files[0]);
-        }
+function previewImage(input) {
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = e => {
+            document.getElementById('previewImg').src = e.target.result;
+            document.getElementById('imagePreview').style.display = 'block';
+        };
+        reader.readAsDataURL(input.files[0]);
     }
+}
 </script>

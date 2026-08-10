@@ -24,7 +24,6 @@
     string GetProductImage(string name)
     {
         var n = name?.ToLower() ?? "";
-        // Check most specific first
         if (n.Contains("headphone") || n.Contains("wh-1000") || n.Contains("earphone"))
             return "/images/headphones.jpg";
         if (n.Contains("apple watch")) return "/images/applewatch.jpg";
@@ -48,7 +47,8 @@
         if (n.Contains("vacuum")) return "/images/vacuum.jpg";
         if (n.Contains("blender")) return "/images/blender.jpg";
         if (n.Contains("microwave")) return "/images/microwave.jpg";
-        return "/images/tshirt.jpg";
+        // Try uploaded image using product name as filename
+        return "/images/" + (name?.ToLower().Replace(" ", "") ?? "default") + ".jpg";
     }
 
     var categories = Model?
@@ -232,7 +232,7 @@ else
                                     <div class="mb-2 d-flex justify-content-center align-items-center" style="height:110px;">
                                         <img src="@imgSrc" alt="@name" class="product-img"
                                              style="width:100px; height:100px; object-fit:contain;"
-                                             onerror="this.style.display='none'" />
+                                             onerror="this.src='/images/tshirt.jpg'" />
                                     </div>
                                     <h6 class="fw-bold mb-1 text-dark" style="font-size:0.82rem; line-height:1.3;">
                                         @name
@@ -286,7 +286,6 @@ else
         btn.disabled = true;
         btn.innerHTML = '<i class="bi bi-hourglass-split me-1"></i>Adding...';
 
-        // Animate flying image
         const rect = btn.getBoundingClientRect();
         const fly = document.createElement('img');
         fly.src = imgSrc;
@@ -309,7 +308,6 @@ else
                 body: formData
             });
             const result = await response.json();
-
             const toast = document.getElementById('cartToast');
             toast.style.display = 'block';
             toast.style.animation = 'slideInRight 0.3s ease';
