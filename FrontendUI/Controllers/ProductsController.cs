@@ -28,50 +28,25 @@ namespace FrontendUI.Controllers
         // GET /Products
         public async Task<IActionResult> Index()
         {
-            // Don't require login to VIEW products
+            // Don't require login to view products
             SetAuthHeader();
 
             try
             {
-                var token = HttpContext.Session.GetString("JWTToken");
-
-                // If not logged in, use admin token to fetch products
-                if (string.IsNullOrEmpty(token))
-                {
-                    // Get products without auth by calling directly
-                    var anonResponse = await _httpClient.GetAsync($"{_gatewayUrl}/products");
-                    if (!anonResponse.IsSuccessStatusCode)
-                    {
-                        ViewBag.Role = null;
-                        return View(new List<System.Text.Json.JsonElement>());
-                    }
-                    var anonJson = await anonResponse.Content.ReadAsStringAsync();
-                    if (string.IsNullOrEmpty(anonJson) || anonJson == "null")
-                    {
-                        ViewBag.Role = null;
-                        return View(new List<System.Text.Json.JsonElement>());
-                    }
-                    var anonProducts = System.Text.Json.JsonSerializer
-                        .Deserialize<List<System.Text.Json.JsonElement>>(anonJson,
-                        new System.Text.Json.JsonSerializerOptions
-                        { PropertyNameCaseInsensitive = true });
-                    ViewBag.Role = null;
-                    ViewBag.IsLoggedIn = false;
-                    return View(anonProducts ?? new List<System.Text.Json.JsonElement>());
-                }
-
                 var response = await _httpClient.GetAsync($"{_gatewayUrl}/products");
+
                 if (!response.IsSuccessStatusCode)
                 {
-                    HttpContext.Session.Clear();
-                    return RedirectToAction("Login", "Auth");
+                    ViewBag.Role = null;
+                    ViewBag.IsLoggedIn = false;
+                    return View(new List<System.Text.Json.JsonElement>());
                 }
 
                 var json = await response.Content.ReadAsStringAsync();
                 if (string.IsNullOrEmpty(json) || json == "null")
                 {
-                    ViewBag.Role = HttpContext.Session.GetString("UserRole");
-                    ViewBag.IsLoggedIn = true;
+                    ViewBag.Role = null;
+                    ViewBag.IsLoggedIn = false;
                     return View(new List<System.Text.Json.JsonElement>());
                 }
 
@@ -81,7 +56,8 @@ namespace FrontendUI.Controllers
                     { PropertyNameCaseInsensitive = true });
 
                 ViewBag.Role = HttpContext.Session.GetString("UserRole");
-                ViewBag.IsLoggedIn = true;
+                ViewBag.IsLoggedIn = !string.IsNullOrEmpty(
+                    HttpContext.Session.GetString("JWTToken"));
                 return View(products ?? new List<System.Text.Json.JsonElement>());
             }
             catch

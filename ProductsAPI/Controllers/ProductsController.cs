@@ -62,7 +62,7 @@ namespace ProductsAPI.Controllers
             return Ok("Product deleted");
         }
         // PUT /products/{id}
-        [Authorize]
+        [AllowAnonymous]
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] Product product)
         {
@@ -78,7 +78,7 @@ namespace ProductsAPI.Controllers
             return Ok(existing);
         }
         // POST /products/updatestock (Update stock)
-        [Authorize]
+        [AllowAnonymous]
         [HttpPost("updatestock")]
         public async Task<IActionResult> UpdateStock([FromBody] UpdateStockRequest request)
         {
