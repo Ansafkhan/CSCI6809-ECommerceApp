@@ -103,10 +103,14 @@ namespace FrontendUI.Controllers
         {
             if (!IsAdmin()) return RedirectToAction("Index", "Home");
             SetAuthHeader();
-            await _httpClient.DeleteAsync($"{_gatewayUrl}/auth/users/{email}");
+
+            var encodedEmail = Uri.EscapeDataString(email);
+            var response = await _httpClient.DeleteAsync(
+                $"{_gatewayUrl}/auth/users/{encodedEmail}");
+
+            Console.WriteLine($"Delete user {email} status: {response.StatusCode}");
             return RedirectToAction("Index");
         }
-
         // POST /Admin/UpdateStock
         [HttpPost]
         public async Task<IActionResult> UpdateStock(int productId, int stock)

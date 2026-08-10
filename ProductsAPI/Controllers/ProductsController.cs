@@ -18,7 +18,8 @@ namespace ProductsAPI.Controllers
         }
 
         // GET /products
-        [Authorize]
+        // GET /products
+        [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
@@ -26,8 +27,8 @@ namespace ProductsAPI.Controllers
             return Ok(products);
         }
 
-        // GET /products?productIds=1,2,3
-        [Authorize]
+        // GET /products/byIds
+        [AllowAnonymous]
         [HttpGet("byIds")]
         public async Task<IActionResult> GetByIds([FromQuery] string productIds)
         {

@@ -111,7 +111,7 @@
                                         <form method="post" action="/Admin/AssignRole">
                                             <input type="hidden" name="email" value="@email" />
                                             <input type="hidden" name="role" value="Admin" />
-                                            <button class="btn btn-sm btn-warning rounded-pill">
+                                            <button type="submit" class="btn btn-sm btn-warning rounded-pill">
                                                 👑 Make Admin
                                             </button>
                                         </form>
@@ -121,7 +121,7 @@
                                         <form method="post" action="/Admin/AssignRole">
                                             <input type="hidden" name="email" value="@email" />
                                             <input type="hidden" name="role" value="Customer" />
-                                            <button class="btn btn-sm btn-outline-secondary rounded-pill">
+                                            <button type="submit" class="btn btn-sm btn-outline-secondary rounded-pill">
                                                 👤 Make Customer
                                             </button>
                                         </form>
@@ -129,9 +129,9 @@
                                     @if (email != "admin@store.com")
                                     {
                                         <form method="post" action="/Admin/DeleteUser"
-                                              onsubmit="return confirm('Delete user @email?')">
+                                              onsubmit="return confirm('Delete this user?')">
                                             <input type="hidden" name="email" value="@email" />
-                                            <button class="btn btn-sm btn-outline-danger rounded-pill">
+                                            <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill">
                                                 🗑️ Delete
                                             </button>
                                         </form>

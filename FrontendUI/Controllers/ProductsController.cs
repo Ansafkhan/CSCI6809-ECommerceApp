@@ -28,41 +28,67 @@ namespace FrontendUI.Controllers
         // GET /Products
         public async Task<IActionResult> Index()
         {
-            var token = HttpContext.Session.GetString("JWTToken");
-            if (string.IsNullOrEmpty(token))
-                return RedirectToAction("Login", "Auth");
-
+            // Don't require login to VIEW products
             SetAuthHeader();
 
             try
             {
-                var response = await _httpClient.GetAsync($"{_gatewayUrl}/products");
+                var token = HttpContext.Session.GetString("JWTToken");
 
+                // If not logged in, use admin token to fetch products
+                if (string.IsNullOrEmpty(token))
+                {
+                    // Get products without auth by calling directly
+                    var anonResponse = await _httpClient.GetAsync($"{_gatewayUrl}/products");
+                    if (!anonResponse.IsSuccessStatusCode)
+                    {
+                        ViewBag.Role = null;
+                        return View(new List<System.Text.Json.JsonElement>());
+                    }
+                    var anonJson = await anonResponse.Content.ReadAsStringAsync();
+                    if (string.IsNullOrEmpty(anonJson) || anonJson == "null")
+                    {
+                        ViewBag.Role = null;
+                        return View(new List<System.Text.Json.JsonElement>());
+                    }
+                    var anonProducts = System.Text.Json.JsonSerializer
+                        .Deserialize<List<System.Text.Json.JsonElement>>(anonJson,
+                        new System.Text.Json.JsonSerializerOptions
+                        { PropertyNameCaseInsensitive = true });
+                    ViewBag.Role = null;
+                    ViewBag.IsLoggedIn = false;
+                    return View(anonProducts ?? new List<System.Text.Json.JsonElement>());
+                }
+
+                var response = await _httpClient.GetAsync($"{_gatewayUrl}/products");
                 if (!response.IsSuccessStatusCode)
                 {
-                    // Token expired or invalid - redirect to login
                     HttpContext.Session.Clear();
                     return RedirectToAction("Login", "Auth");
                 }
 
                 var json = await response.Content.ReadAsStringAsync();
-
                 if (string.IsNullOrEmpty(json) || json == "null")
                 {
                     ViewBag.Role = HttpContext.Session.GetString("UserRole");
+                    ViewBag.IsLoggedIn = true;
                     return View(new List<System.Text.Json.JsonElement>());
                 }
 
-                var products = System.Text.Json.JsonSerializer.Deserialize<List<System.Text.Json.JsonElement>>(json,
-                    new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                var products = System.Text.Json.JsonSerializer
+                    .Deserialize<List<System.Text.Json.JsonElement>>(json,
+                    new System.Text.Json.JsonSerializerOptions
+                    { PropertyNameCaseInsensitive = true });
 
                 ViewBag.Role = HttpContext.Session.GetString("UserRole");
+                ViewBag.IsLoggedIn = true;
                 return View(products ?? new List<System.Text.Json.JsonElement>());
             }
             catch
             {
-                HttpContext.Session.Clear();
-                return RedirectToAction("Login", "Auth");
+                ViewBag.Role = null;
+                ViewBag.IsLoggedIn = false;
+                return View(new List<System.Text.Json.JsonElement>());
             }
         }
 
@@ -135,6 +161,32 @@ namespace FrontendUI.Controllers
             SetAuthHeader();
             await _httpClient.DeleteAsync($"{_gatewayUrl}/products/{id}");
             return RedirectToAction("Index");
+        }
+        public async Task<IActionResult> Details(int id)
+        {
+            SetAuthHeader();
+            try
+            {
+                var response = await _httpClient.GetAsync(
+                    $"{_gatewayUrl}/products/byIds?productIds={id}");
+                var json = await response.Content.ReadAsStringAsync();
+                var products = System.Text.Json.JsonSerializer
+                    .Deserialize<List<System.Text.Json.JsonElement>>(json,
+                    new System.Text.Json.JsonSerializerOptions
+                    { PropertyNameCaseInsensitive = true });
+
+                var product = products?.FirstOrDefault();
+                if (product == null)
+                    return RedirectToAction("Index");
+
+                ViewBag.IsLoggedIn = !string.IsNullOrEmpty(
+                    HttpContext.Session.GetString("JWTToken"));
+                return View(product.Value);
+            }
+            catch
+            {
+                return RedirectToAction("Index");
+            }
         }
     }
 }

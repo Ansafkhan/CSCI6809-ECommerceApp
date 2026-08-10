@@ -1,0 +1,255 @@
+@using System.Text.Json
+@model JsonElement
+
+@{
+    ViewData["Title"] = "Product Details";
+    var name = Model.GetProperty("name").GetString() ?? "";
+    var description = Model.TryGetProperty("description", out var d)
+        ? d.GetString() : "";
+    var price = Model.GetProperty("price").GetDecimal();
+    var stock = Model.GetProperty("stock").GetInt32();
+    var category = Model.TryGetProperty("category", out var cat)
+        ? cat.GetString() : "General";
+    var id = Model.GetProperty("id").GetInt32();
+
+    var productImageUrls = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+    {
+        {"iphone", "/images/iphone.jpg"}, {"phone", "/images/iphone.jpg"},
+        {"samsung", "/images/iphone.jpg"},
+        {"xps", "/images/laptop.jpg"}, {"dell", "/images/laptop.jpg"},
+        {"laptop", "/images/laptop.jpg"},
+        {"headphone", "/images/headphones.jpg"}, {"sony", "/images/headphones.jpg"},
+        {"tab", "/images/tablet.jpg"}, {"ipad", "/images/tablet.jpg"},
+        {"apple watch", "/images/applewatch.jpg"}, {"smartwatch", "/images/applewatch.jpg"},
+        {"analog", "/images/analogwatch.jpg"}, {"wrist watch", "/images/analogwatch.jpg"},
+        {"watch", "/images/analogwatch.jpg"},
+        {"slim fit", "/images/tshirt.jpg"}, {"t-shirt", "/images/tshirt.jpg"},
+        {"jacket", "/images/jacket.jpg"}, {"denim", "/images/jacket.jpg"},
+        {"sneaker", "/images/sneakers.jpg"}, {"running", "/images/sneakers.jpg"},
+        {"wallet", "/images/wallet.jpg"}, {"leather", "/images/wallet.jpg"},
+        {"air fryer", "/images/airfryer.jpg"}, {"fryer", "/images/airfryer.jpg"},
+        {"coffee", "/images/coffeemaker.jpg"},
+        {"vacuum", "/images/vacuum.jpg"},
+        {"blender", "/images/blender.jpg"},
+        {"microwave", "/images/microwave.jpg"}
+    };
+
+    string GetProductImage(string n)
+    {
+        var lower = n?.ToLower() ?? "";
+        if (lower.Contains("headphone") || lower.Contains("wh-1000") || lower.Contains("earphone"))
+            return "/images/headphones.jpg";
+        if (lower.Contains("apple watch")) return "/images/applewatch.jpg";
+        if (lower.Contains("galaxy tab") || lower.Contains("tab s") || lower.Contains("ipad"))
+            return "/images/tablet.jpg";
+        if (lower.Contains("iphone") || lower.Contains("galaxy s") || lower.Contains("phone"))
+            return "/images/iphone.jpg";
+        if (lower.Contains("laptop") || lower.Contains("dell") || lower.Contains("xps"))
+            return "/images/laptop.jpg";
+        if (lower.Contains("analog") || lower.Contains("wrist watch"))
+            return "/images/analogwatch.jpg";
+        if (lower.Contains("watch")) return "/images/analogwatch.jpg";
+        if (lower.Contains("slim fit") || lower.Contains("t-shirt") || lower.Contains("tshirt"))
+            return "/images/tshirt.jpg";
+        if (lower.Contains("jacket") || lower.Contains("denim")) return "/images/jacket.jpg";
+        if (lower.Contains("sneaker") || lower.Contains("running") || lower.Contains("shoe"))
+            return "/images/sneakers.jpg";
+        if (lower.Contains("wallet") || lower.Contains("leather")) return "/images/wallet.jpg";
+        if (lower.Contains("air fryer") || lower.Contains("fryer")) return "/images/airfryer.jpg";
+        if (lower.Contains("coffee")) return "/images/coffeemaker.jpg";
+        if (lower.Contains("vacuum")) return "/images/vacuum.jpg";
+        if (lower.Contains("blender")) return "/images/blender.jpg";
+        if (lower.Contains("microwave")) return "/images/microwave.jpg";
+        return "/images/tshirt.jpg";
+    }
+
+    var imgSrc = GetProductImage(name);
+}
+
+<style>
+    .detail-card {
+        border-radius: 24px;
+        border: none;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+    }
+
+    .product-img-large {
+        border-radius: 20px;
+        transition: transform 0.3s ease;
+        max-height: 350px;
+        object-fit: contain;
+    }
+
+    .product-img-large:hover {
+        transform: scale(1.05);
+    }
+
+    .price-display {
+        font-size: 2.2rem;
+        font-weight: 800;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .btn-cart-large {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        border-radius: 50px;
+        color: white;
+        font-size: 1.1rem;
+        padding: 12px 35px;
+        transition: all 0.3s ease;
+    }
+
+    .btn-cart-large:hover {
+        transform: scale(1.05);
+        box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        color: white;
+    }
+</style>
+
+<!-- Breadcrumb -->
+<nav aria-label="breadcrumb" class="mb-4">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item"><a href="/Products">Products</a></li>
+        <li class="breadcrumb-item active">@name</li>
+    </ol>
+</nav>
+
+<div class="card detail-card">
+    <div class="card-body p-5">
+        <div class="row align-items-center">
+            <!-- Product Image -->
+            <div class="col-md-5 text-center mb-4 mb-md-0">
+                <img src="@imgSrc" alt="@name" class="product-img-large img-fluid" />
+            </div>
+
+            <!-- Product Info -->
+            <div class="col-md-7">
+                <span class="badge rounded-pill mb-3" style="background:#667eea; font-size:0.85rem;">
+                    @category
+                </span>
+
+                <h2 class="fw-bold mb-3">@name</h2>
+
+                <p class="text-muted fs-5 mb-4">@description</p>
+
+                <div class="price-display mb-3">$@price</div>
+
+                <div class="d-flex align-items-center gap-3 mb-4">
+                    @if (stock > 0)
+                    {
+                        <span class="badge bg-success rounded-pill px-3 py-2">
+                            ✓ In Stock
+                        </span>
+                        <span class="text-muted">@stock items available</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-danger rounded-pill px-3 py-2">
+                            Out of Stock
+                        </span>
+                    }
+                </div>
+
+                <hr />
+
+                <!-- Toast notification -->
+                <div id="cartToast" style="
+                    position:fixed; top:80px; right:20px; z-index:9999;
+                    display:none; min-width:220px;">
+                    <div class="alert alert-success shadow rounded-4 d-flex align-items-center gap-3 py-3 mb-0">
+                        <i class="bi bi-cart-check-fill text-success fs-4"></i>
+                        <div>
+                            <div class="fw-bold">Added to cart!</div>
+                            <small class="text-muted">Item added successfully</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex gap-3 mt-4">
+                    @if (stock > 0)
+                    {
+                        @if (ViewBag.IsLoggedIn == true)
+                        {
+                            <button onclick="addToCartDetails(@id, '@imgSrc')" class="btn btn-cart-large">
+                                <i class="bi bi-cart-plus me-2"></i>Add to Cart
+                            </button>
+                        }
+                        else
+                        {
+                            <a href="/Auth/Login" class="btn btn-cart-large text-white text-decoration-none">
+                                <i class="bi bi-cart-plus me-2"></i>Add to Cart
+                            </a>
+                        }
+                    }
+
+                    <a href="/Products" class="btn btn-outline-secondary rounded-pill px-4 fs-5">
+                        <i class="bi bi-arrow-left me-2"></i>Back to Products
+                    </a>
+                </div>
+
+                <script>
+                                    async function addToCartDetails(productId, imgSrc) {
+                                        const btn = document.querySelector('.btn-cart-large');
+                                        btn.disabled = true;
+                                        btn.innerHTML = '<i class="bi bi-hourglass-split me-2"></i>Adding...';
+
+                                        // Flying animation
+                                        const rect = btn.getBoundingClientRect();
+                                        const fly = document.createElement('img');
+                                        fly.src = imgSrc;
+                                        fly.style.cssText = `
+                                                                                                                                        position:fixed; z-index:9999; pointer-events:none;
+                                                                                                                                        left:${rect.left + rect.width / 2 - 30}px;
+                                                                                                                                        top:${rect.top - 30}px;
+                                                                                                                                        width:60px; height:60px;
+                                                                                                                                        object-fit:contain; border-radius:12px;
+                                                                                                                                        animation: flyAway 0.7s ease forwards;
+                                                                                                                                    `;
+                                        document.body.appendChild(fly);
+                                        setTimeout(() => fly.remove(), 700);
+
+                                        try {
+                                            const formData = new FormData();
+                                            formData.append('productId', productId);
+                                            const response = await fetch('/Cart/AddItemAjax', {
+                                                method: 'POST',
+                                                body: formData
+                                            });
+                                            const result = await response.json();
+
+                                            const toast = document.getElementById('cartToast');
+                                            toast.style.display = 'block';
+                                            setTimeout(() => toast.style.display = 'none', 2500);
+                                        } catch (e) {
+                                            console.error(e);
+                                        }
+
+                                        setTimeout(() => {
+                                            btn.disabled = false;
+                                            btn.innerHTML = '<i class="bi bi-cart-plus me-2"></i>Add to Cart';
+                                        }, 1000);
+                                    }
+                </script>
+
+                <style>
+                                    @@keyframes flyAway {
+                                        0% {
+                                            transform: scale(1) translate(0, 0);
+                                            opacity: 1;
+                                        }
+
+                                        100% {
+                                            transform: scale(0.2) translate(200px, -200px);
+                                            opacity: 0;
+                                        }
+                                    }
+                </style>
+            </div>
+        </div>
+    </div>
+</div>

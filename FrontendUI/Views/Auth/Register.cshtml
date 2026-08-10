@@ -10,31 +10,40 @@
 
                 @if (ViewBag.Error != null)
                 {
-                    <div class="alert alert-danger">@ViewBag.Error</div>
+                    <div class="alert alert-danger">
+                        @ViewBag.Error
+                        @if (ViewBag.Error != null && ViewBag.Error.ToString().Contains("already registered"))
+                        {
+                            <a href="/Auth/Login" class="alert-link ms-1">Click here to login →</a>
+                        }
+                    </div>
                 }
 
-                <form method="post">
+                <form method="post" id="registerForm">
                     <div class="mb-3">
                         <label class="form-label">Username</label>
-                        <input type="text" name="username" class="form-control" placeholder="Choose a username" required
-                               minlength="3" />
+                        <input type="text" name="username" id="usernameInput" class="form-control"
+                               placeholder="Choose a username" required minlength="3" autocomplete="off" />
+                        <div id="usernameFeedback" class="mt-1" style="font-size:0.85rem;"></div>
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Email</label>
-                        <input type="email" name="email" class="form-control" placeholder="Enter your email" required />
+                        <input type="email" name="email" id="emailInput" class="form-control"
+                               placeholder="Enter your email" required autocomplete="off" />
+                        <div id="emailFeedback" class="mt-1" style="font-size:0.85rem;"></div>
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Password</label>
                         <div class="input-group">
                             <input type="password" name="password" id="passwordInput" class="form-control"
-                                   placeholder="Min 6 chars, include uppercase & symbol" required minlength="6" />
+                                   placeholder="Minimum 6 characters" required minlength="6" />
                             <button class="btn btn-outline-secondary" type="button" onclick="togglePassword()">
                                 <i class="bi bi-eye" id="eyeIcon"></i>
                             </button>
                         </div>
                         <small class="text-muted">Minimum 6 characters e.g. test123</small>
                     </div>
-                    <button type="submit" class="btn btn-primary w-100">
+                    <button type="submit" id="submitBtn" class="btn btn-primary w-100">
                         <i class="bi bi-person-plus"></i> Register
                     </button>
                 </form>
@@ -48,18 +57,77 @@
         </div>
     </div>
 </div>
+
 <script>
     function togglePassword() {
         const input = document.getElementById('passwordInput');
         const icon = document.getElementById('eyeIcon');
         if (input.type === 'password') {
             input.type = 'text';
-            icon.classList.remove('bi-eye');
-            icon.classList.add('bi-eye-slash');
+            icon.classList.replace('bi-eye', 'bi-eye-slash');
         } else {
             input.type = 'password';
-            icon.classList.remove('bi-eye-slash');
-            icon.classList.add('bi-eye');
+            icon.classList.replace('bi-eye-slash', 'bi-eye');
         }
     }
+
+    let usernameTimer;
+    document.getElementById('usernameInput').addEventListener('input', function () {
+        const val = this.value.trim();
+        const feedback = document.getElementById('usernameFeedback');
+        clearTimeout(usernameTimer);
+        if (val.length < 3) {
+            feedback.innerHTML = '';
+            this.classList.remove('is-valid', 'is-invalid');
+            return;
+        }
+        feedback.innerHTML = '<span class="text-muted">⏳ Checking...</span>';
+        usernameTimer = setTimeout(async () => {
+            try {
+                const res = await fetch('/Auth/CheckUsername?username=' + encodeURIComponent(val));
+                const data = await res.json();
+                if (data.taken) {
+                    this.classList.add('is-invalid');
+                    this.classList.remove('is-valid');
+                    feedback.innerHTML = '<span class="text-danger">❌ Username already taken. Try another one.</span>';
+                } else {
+                    this.classList.add('is-valid');
+                    this.classList.remove('is-invalid');
+                    feedback.innerHTML = '<span class="text-success">✅ Username is available!</span>';
+                }
+            } catch {
+                feedback.innerHTML = '';
+            }
+        }, 600);
+    });
+
+    let emailTimer;
+    document.getElementById('emailInput').addEventListener('input', function () {
+        const val = this.value.trim();
+        const feedback = document.getElementById('emailFeedback');
+        clearTimeout(emailTimer);
+        if (!val.includes('@@')) {
+            feedback.innerHTML = '';
+            this.classList.remove('is-valid', 'is-invalid');
+            return;
+        }
+        feedback.innerHTML = '<span class="text-muted">⏳ Checking...</span>';
+        emailTimer = setTimeout(async () => {
+            try {
+                const res = await fetch('/Auth/CheckEmail?email=' + encodeURIComponent(val));
+                const data = await res.json();
+                if (data.taken) {
+                    this.classList.add('is-invalid');
+                    this.classList.remove('is-valid');
+                    feedback.innerHTML = '<span class="text-danger">❌ Email already registered. <a href="/Auth/Login">Login instead →</a></span>';
+                } else {
+                    this.classList.add('is-valid');
+                    this.classList.remove('is-invalid');
+                    feedback.innerHTML = '<span class="text-success">✅ Email is available!</span>';
+                }
+            } catch {
+                feedback.innerHTML = '';
+            }
+        }, 600);
+    });
 </script>
