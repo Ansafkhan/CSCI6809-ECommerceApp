@@ -116,6 +116,16 @@
                                             </button>
                                         </form>
                                     }
+                                    else if (email != "admin@store.com")
+                                    {
+                                        <form method="post" action="/Admin/AssignRole">
+                                            <input type="hidden" name="email" value="@email" />
+                                            <input type="hidden" name="role" value="Customer" />
+                                            <button type="submit" class="btn btn-sm btn-outline-secondary rounded-pill">
+                                                👤 Make Customer
+                                            </button>
+                                        </form>
+                                    }
                                     @if (email != "admin@store.com")
                                     {
                                         <form method="post" action="/Admin/DeleteUser"
